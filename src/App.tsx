@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, 
@@ -22,6 +22,16 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(error => {
+        console.log("Autoplay was prevented:", error);
+      });
+    }
+  }, []);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -318,30 +328,34 @@ export default function App() {
           </div>
         </section>
 
-        {/* About Section - Standardized */}
+        {/* About Section - Vertical Layout */}
         <section id="sobre" className="py-24 bg-white overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
-              {/* Video Container */}
-              <div className="relative order-2 md:order-1">
-                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-video md:aspect-[4/5] bg-slate-100 border border-slate-100">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="flex flex-col gap-12 items-center">
+              {/* Video Container - Horizontal */}
+              <div className="relative w-full">
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-video bg-slate-100 border border-slate-100">
                   <video 
+                    ref={videoRef}
                     autoPlay 
                     muted 
                     loop 
                     playsInline 
+                    preload="auto"
                     className="w-full h-full object-cover"
+                    poster="https://images.pexels.com/photos/3970333/pexels-photo-3970333.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                   >
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-medical-mask-on-a-blue-background-40011-large.mp4" type="video/mp4" />
                     <source src="/video.mp4" type="video/mp4" />
+                    <source src="https://player.vimeo.com/external/494252666.sd.mp4?s=72ad13895115652904243c03a8995057799539ae&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
+                    <source src="https://cdn.coverr.co/videos/preview/720p/coverr-medical-mask-on-blue-background-5544.mp4" type="video/mp4" />
                   </video>
                 </div>
                 {/* Decorative element */}
                 <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-brand-blue/5 rounded-full -z-10"></div>
               </div>
               
-              {/* Text Content */}
-              <div className="order-1 md:order-2">
+              {/* Text Content - Below Video */}
+              <div className="text-center">
                 <div className="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-6 border border-slate-200">
                   <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
                   Sobre a Amaros Importer
@@ -352,7 +366,7 @@ export default function App() {
                   <span className="text-brand-blue">Detalhe Importado.</span>
                 </h2>
                 
-                <div className="space-y-6 text-slate-600 leading-relaxed text-lg font-light">
+                <div className="space-y-6 text-slate-600 leading-relaxed text-lg font-light max-w-2xl mx-auto">
                   <p>
                     A <strong className="font-semibold text-slate-900">AMAROS IMPORTER</strong> é especialista em conectar o mercado brasileiro às melhores soluções globais em materiais descartáveis e equipamentos de proteção.
                   </p>
@@ -361,7 +375,7 @@ export default function App() {
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12 text-left">
                   <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-brand-blue/30 transition-colors group">
                     <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <ShieldCheck className="w-6 h-6 text-brand-blue" />
